@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Estudos Flutter',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,41 +30,80 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Contato> contatos = [];
 
-  void _incrementCounter() {
-    setState(() {
-     
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    contatos.add(new Contato(
+      nome: "João", telefone: "99999-8888", tipo: ContatoType.CELULAR);
+    );
+    contatos.add(new Contato(
+      nome: "Lucas", telefone: "99999-7777", tipo: ContatoType.CELULAR);
+    );
+    contatos.add(new Contato(
+      nome: "Pedro", telefone: "99999-5555", tipo: ContatoType.FAVORITO);
+    );
+    contatos.add(new Contato(
+      nome: "Paulo", telefone: "99999-3333", tipo: ContatoType.CASA);
+    );
+    contatos.add(new Contato(
+      nome: "Mateus", telefone: "99999-4444", tipo: ContatoType.TRABALHO);
+    );
+    contatos.add(new Contato(
+      nome: "Tiago", telefone: "99999-0000", tipo: ContatoType.CELULAR);
+    );
+    contatos.add(new Contato(
+      nome: "Moisés", telefone: "99999-1111", tipo: ContatoType.CELULAR);
+    );
+
+    contatos.sort((a, b) => a.nome.compareTo(b.nome));
   }
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: ListView.separated(
+            itemBuilder: (context, index) {
+              var contato = contatos[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  child: ContatoHelper.getIconByContatoType(contato.tipo),
+                  backgroundColor: Colors.blue[200],
+                ),
+                title: Text(contato.nome),
+                subtitle: Text(contato.telefone),
+                trailing: IconButton(icon: Icon(Icons.call),
+                onPressed: () => {},
+                ),
+              );
+            }, 
+            separatorBuilder: (context, index) => Divider(), 
+            itemCount: contatos.length));
+  }
+}
+
+class Contato {
+  final String nome;
+  final String telefone;
+  final ContatoType tipo;
+
+  Contato({required this.nome, required this.telefone, required this.tipo});
+}
+
+Enum ContatoType {CELULAR, TRABALHO, FAVORITO, CASA }
+
+class ContatoHelper {
+  static Icon getIconByContatoType (ContatoType tipo) {
+    switch (tipo) {
+      case ContatoType.CELULAR;
+        return Icon(Icons.phone_android, color: Colors.green[700]);
+      case ContatoType.TRABALHO;
+        return Icon(Icons.phone_android, color: Colors.green[600]);
+      case ContatoType.FAVORITO;
+        return Icon(Icons.phone_android, color: Colors.green[600]);
+      case ContatoType.CASA;
+        return Icon(Icons.phone_android, color: Colors.green[600]);
+    }
   }
 }
